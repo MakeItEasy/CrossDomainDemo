@@ -1,0 +1,49 @@
+<input type='button' value='点击测试: simple request(GET method)' onclick='crossDomainRequest(1)' />  
+<input type='button' value='点击测试: simple request(POST method)' onclick='crossDomainRequest(2)' />  
+<input type='button' value='点击测试: preflight request' onclick='crossDomainRequest(3)' />  
+
+<div id="content"></div>  
+
+<script type="text/javascript">
+  var xhr = new XMLHttpRequest();  
+  var url = 'http://crossdomain.cn:3000';  
+  function crossDomainRequest(mode) {  
+    document.getElementById("content").innerHTML = "开始……";  
+    if (xhr) {  
+      switch(mode) {
+        case 1:
+          // 简单请求GET
+          xhr.open('GET', url, true);  
+          break;
+        case 2:
+          // 简单请求POST
+          xhr.open('POST', url, true);  
+          break;
+        case 3:
+          // preflight请求
+          xhr.open('POST', url, true);  
+          xhr.setRequestHeader("X-Dai", "test by dai"); 
+          break;
+      }
+      xhr.onreadystatechange = handler;  
+      xhr.send();  
+    } else {  
+      document.getElementById("content").innerHTML = "不能创建 XMLHttpRequest";  
+    }  
+  }  
+  function handler(evtXHR) {  
+    // alert(xhr.readyState);
+    if (xhr.readyState == 4) {  
+      alert(xhr.status);
+      if (xhr.status == 200) {  
+        var response = xhr.responseText;  
+        document.getElementById("content").innerHTML = "结果：" + response;  
+      } else {  
+        document.getElementById("content").innerHTML = "不允许跨域请求。";  
+      }  
+    }  
+    else {  
+      document.getElementById("content").innerHTML += "<br/>执行状态 readyState：" + xhr.readyState;  
+    }  
+  }  
+</script> 
